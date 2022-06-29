@@ -6,5 +6,5 @@ Theengs Explorer is still in early development. To try the development version, 
 
 ```shell
 pip3 install TheengsDecoder textual
-python3 TheengsDecoder/__init__.py
+python3 TheengsExplorer/__init__.py
 ```
