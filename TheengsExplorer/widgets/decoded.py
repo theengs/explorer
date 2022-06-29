@@ -20,15 +20,15 @@ class Property(Widget):
         """Render Property widget."""
         if self.entry in self.device_properties:
             unit = self.device_properties[self.entry]["unit"]
-            if unit not in ["int", "hex", "string"]:  # Only show real units
+            if unit in ["int", "hex", "string", "status"]:  # Don't show these units
                 return Text.assemble(
                     f"{self.device_properties[self.entry]['name']}: ",
-                    (f"{self.value} {unit}", "cyan bold"),
+                    (str(self.value), "cyan bold"),
                 )
             else:
                 return Text.assemble(
                     f"{self.device_properties[self.entry]['name']}: ",
-                    (str(self.value), "cyan bold"),
+                    (f"{self.value} {unit}", "cyan bold"),
                 )
         else:  # There's no human-readable name of the property
             return Text.assemble(f"{self.entry}: ", (str(self.value), "cyan bold"))
