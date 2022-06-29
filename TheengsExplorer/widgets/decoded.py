@@ -20,7 +20,7 @@ class Property(Widget):
         """Render Property widget."""
         if self.entry in self.device_properties:
             unit = self.device_properties[self.entry]["unit"]
-            if unit not in ["int", "hex"]:  # Only show real units
+            if unit not in ["int", "hex", "string"]:  # Only show real units
                 return Text.assemble(
                     f"{self.device_properties[self.entry]['name']}: ",
                     (f"{self.value} {unit}", "cyan bold"),
