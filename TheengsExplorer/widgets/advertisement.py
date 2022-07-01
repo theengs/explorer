@@ -1,5 +1,5 @@
 from bleak.uuids import uuidstr_to_str
-from companies import company
+from bluetooth_numbers.companies import company
 from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
