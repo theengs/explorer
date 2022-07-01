@@ -4,7 +4,7 @@
 
 ![Screenshot](screenshot.png)
 
-Theengs Explorer is still in early development. To try the development version, install its dependencies [Theengs Decoder](https://decoder.theengs.io/use/python.html) and [Textual](https://github.com/Textualize/textual) and run it like this:
+Theengs Explorer is still in early development. To try the development version, install its dependencies [Theengs Decoder](https://decoder.theengs.io/use/python.html), [Textual](https://github.com/Textualize/textual) and [bluetooth-numbers](https://github.com/koenvervloesem/bluetooth-numbers) and run it like this:
 
 ```shell
 python3 TheengsExplorer/__init__.py
