@@ -18,6 +18,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+from argparse import ArgumentParser
+
 from bleak import BleakScanner
 from textual.app import App
 from textual.widgets import Footer, ScrollView
@@ -27,11 +29,15 @@ from widgets.devicetable import DeviceTable
 class TheengsExplorerApp(App):
     """Textual app that shows BLE advertisements."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.scanner = BleakScanner()
+    def __init__(self, config, *args, **kwargs):
+        self.config = config
+        if config["adapter"]:
+            self.scanner = BleakScanner(adapter=config["adapter"])
+        else:
+            self.scanner = BleakScanner()
         self.scanner.register_detection_callback(self.detection_callback)
         self.scanning = True
+        super().__init__(*args, **kwargs)
 
     async def detection_callback(self, device, advertisement_data) -> None:
         """Process detected advertisement data from device."""
@@ -64,4 +70,19 @@ class TheengsExplorerApp(App):
 
 
 if __name__ == "__main__":
-    TheengsExplorerApp.run(title="Theengs Explorer")
+
+    config = {"adapter": None}
+
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-a",
+        "--adapter",
+        type=str,
+        help="Bluetooth adapter (e.g. hci1 on Linux)",
+    )
+    args = parser.parse_args()
+
+    if args.adapter:
+        config["adapter"] = args.adapter
+
+    TheengsExplorerApp.run(config=config, title="Theengs Explorer")
