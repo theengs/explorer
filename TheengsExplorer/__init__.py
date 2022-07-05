@@ -48,6 +48,7 @@ class TheengsExplorerApp(App):
         """Bind keys when the app loads."""
         await self.bind("q", "quit", "Quit")
         await self.bind("s", "toggle_scan", "Toggle scan")
+        await self.bind("a", "toggle_advertisement", "Show advertisement")
 
     async def action_toggle_scan(self) -> None:
         """Start or stop BLE scanner."""
@@ -58,9 +59,16 @@ class TheengsExplorerApp(App):
             await self.scanner.start()
             self.scanning = True
 
+    async def action_toggle_advertisement(self) -> None:
+        """Show or hide advertisement data."""
+        if self.config["advertisement"]:
+            self.config["advertisement"] = False
+        else:
+            self.config["advertisement"] = True
+
     async def on_mount(self) -> None:
         """Create ScrollView and start BLE scan."""
-        self.device_table = DeviceTable()
+        self.device_table = DeviceTable(self.config)
         self.scroll_view = ScrollView(self.device_table)
 
         await self.view.dock(Footer(), edge="bottom")
@@ -71,7 +79,7 @@ class TheengsExplorerApp(App):
 
 if __name__ == "__main__":
 
-    config = {"adapter": None}
+    config = {"adapter": None, "advertisement": True}
 
     parser = ArgumentParser()
     parser.add_argument(
