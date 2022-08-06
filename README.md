@@ -24,7 +24,7 @@ optional arguments:
                         Scanning mode (default: active)
 ```
 
-For passive scanning you need Linux kernel >= 5.10 and BlueZ >= 5.56 with experimental features enabled.
+Passive scanning only works on Windows or Linux kernel >= 5.10 and BlueZ >= 5.56 with experimental features enabled.
 
 To enable experimental features in BlueZ on a Linux distribution that uses systemd, run the following command:
 

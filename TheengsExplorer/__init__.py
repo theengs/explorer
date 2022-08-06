@@ -19,14 +19,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from argparse import ArgumentParser
+import platform
 
 from bleak import BleakScanner
-from bleak.assigned_numbers import AdvertisementDataType
-from bleak.backends.bluezdbus.advertisement_monitor import OrPattern
-from bleak.backends.bluezdbus.scanner import BlueZScannerArgs
 from textual.app import App
 from textual.widgets import Footer, ScrollView
 from widgets.devicetable import DeviceTable
+
+if platform.system() == "Linux":
+    from bleak.assigned_numbers import AdvertisementDataType
+    from bleak.backends.bluezdbus.advertisement_monitor import OrPattern
+    from bleak.backends.bluezdbus.scanner import BlueZScannerArgs
 
 
 class TheengsExplorerApp(App):
@@ -39,7 +42,7 @@ class TheengsExplorerApp(App):
 
         # Passive scanning with BlueZ needs at least one or_pattern.
         # The following matches all devices.
-        if config["scanning_mode"] == "passive":
+        if platform.system() == "Linux" and config["scanning_mode"] == "passive":
             scanner_kwargs["bluez"] = BlueZScannerArgs(
                 or_patterns=[
                     OrPattern(0, AdvertisementDataType.FLAGS, b"\x06"),
