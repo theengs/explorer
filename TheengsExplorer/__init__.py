@@ -112,7 +112,7 @@ if __name__ == "__main__":
         type=str,
         default="active",
         choices=("active", "passive"),
-        help="Scanning mode",
+        help="Scanning mode (default: active)",
     )
     args = parser.parse_args()
 
