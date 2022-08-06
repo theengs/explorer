@@ -9,3 +9,42 @@ Theengs Explorer is still in early development. To try the development version, 
 ```shell
 python3 TheengsExplorer/__init__.py
 ```
+
+You can use some optional arguments:
+
+```shell
+$ python3 TheengsExplorer/__init__.py --help
+usage: __init__.py [-h] [-a ADAPTER] [-s {active,passive}]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ADAPTER, --adapter ADAPTER
+                        Bluetooth adapter (e.g. hci1 on Linux)
+  -s {active,passive}, --scanning-mode {active,passive}
+                        Scanning mode (default: active)
+```
+
+For passive scanning you need Linux kernel >= 5.10 and BlueZ >= 5.56 with experimental features enabled.
+
+To enable experimental features in BlueZ on a Linux distribution that uses systemd, run the following command:
+
+```shell
+sudo systemctl edit bluetooth.service
+```
+
+Then add the following lines:
+
+```
+[Service]
+ExecStart=
+ExecStart=/usr/lib/bluetooth/bluetoothd --experimental
+```
+
+Save and close the file and then run the following commands:
+
+```
+sudo systemctl dameon-reload
+sudo systemctl restart bluetooth.service
+```
+
+Note that currently Theengs Explorer has only been tested on Linux, but all libraries it depends on work on Linux, Windows and macOS. If you try it on Windows and macOS and you encounter problems, please let us know in an [issue](https://github.com/theengs/explorer/issues) or a [discussion](https://github.com/theengs/explorer/discussions/4).
