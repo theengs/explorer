@@ -21,6 +21,9 @@
 from argparse import ArgumentParser
 
 from bleak import BleakScanner
+from bleak.assigned_numbers import AdvertisementDataType
+from bleak.backends.bluezdbus.advertisement_monitor import OrPattern
+from bleak.backends.bluezdbus.scanner import BlueZScannerArgs
 from textual.app import App
 from textual.widgets import Footer, ScrollView
 from widgets.devicetable import DeviceTable
@@ -31,10 +34,24 @@ class TheengsExplorerApp(App):
 
     def __init__(self, config, *args, **kwargs):
         self.config = config
+
+        scanner_kwargs = {"scanning_mode": config["scanning_mode"]}
+
+        # Passive scanning with BlueZ needs at least one or_pattern.
+        # The following matches all devices.
+        if config["scanning_mode"] == "passive":
+            scanner_kwargs["bluez"] = BlueZScannerArgs(
+                or_patterns=[
+                    OrPattern(0, AdvertisementDataType.FLAGS, b"\x06"),
+                    OrPattern(0, AdvertisementDataType.FLAGS, b"\x1a"),
+                ]
+            )
+
         if config["adapter"]:
-            self.scanner = BleakScanner(adapter=config["adapter"], scanning_mode=config["scanning_mode"])
-        else:
-            self.scanner = BleakScanner(scanning_mode=config["scanning_mode"])
+            scanner_kwargs["adapter"] = config["adapter"]
+
+        self.scanner = BleakScanner(**scanner_kwargs)
+
         self.scanner.register_detection_callback(self.detection_callback)
         self.scanning = True
         super().__init__(*args, **kwargs)
