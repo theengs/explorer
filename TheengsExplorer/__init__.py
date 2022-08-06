@@ -32,9 +32,9 @@ class TheengsExplorerApp(App):
     def __init__(self, config, *args, **kwargs):
         self.config = config
         if config["adapter"]:
-            self.scanner = BleakScanner(adapter=config["adapter"])
+            self.scanner = BleakScanner(adapter=config["adapter"], scanning_mode=config["scanning_mode"])
         else:
-            self.scanner = BleakScanner()
+            self.scanner = BleakScanner(scanning_mode=config["scanning_mode"])
         self.scanner.register_detection_callback(self.detection_callback)
         self.scanning = True
         super().__init__(*args, **kwargs)
@@ -79,7 +79,7 @@ class TheengsExplorerApp(App):
 
 if __name__ == "__main__":
 
-    config = {"adapter": None, "advertisement": True}
+    config = {"adapter": None, "advertisement": True, "scanning_mode": "active"}
 
     parser = ArgumentParser()
     parser.add_argument(
@@ -88,9 +88,19 @@ if __name__ == "__main__":
         type=str,
         help="Bluetooth adapter (e.g. hci1 on Linux)",
     )
+    parser.add_argument(
+        "-s",
+        "--scanning-mode",
+        dest="scanning_mode",
+        type=str,
+        default="active",
+        choices=("active", "passive"),
+        help="Scanning mode",
+    )
     args = parser.parse_args()
 
     if args.adapter:
         config["adapter"] = args.adapter
+    config["scanning_mode"] = args.scanning_mode
 
     TheengsExplorerApp.run(config=config, title="Theengs Explorer")
