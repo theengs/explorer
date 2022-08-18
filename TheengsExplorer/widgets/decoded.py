@@ -47,13 +47,17 @@ class Decoded(Widget):
         table = Table(show_header=False, show_edge=False, padding=0)
 
         if self.decoded:
-            # Remove tempf, as well as keys we already show in the Device or Advertisement widgets
-            decoded = self.decoded.copy()  # Make local copy before popping
+            decoded = self.decoded.copy()  # Make local copy before deleting keys
+            # Remove tempf and keys we already show in the Device or Advertisement widgets
             for key in ["name", "brand", "model", "model_id", "tempf", "cidc"]:
                 try:
-                    decoded.pop(key)
+                    del decoded[key]
                 except KeyError:
                     pass
+            # Remove tempf_* keys
+            for key in list(decoded.keys()):
+                if key.startswith("tempf_"):
+                    del decoded[key]
 
             device_properties = json.loads(getProperties(self.decoded["model_id"]))[
                 "properties"
