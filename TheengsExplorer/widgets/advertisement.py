@@ -9,10 +9,11 @@ from textual.widget import Widget
 class CompanyID(Widget):
     """Widget that shows company ID and name."""
 
-    def __init__(self, cic: int):
+    def __init__(self, cic: int, compliant: bool):
         """Initialize CompanyID widget."""
         super().__init__()
         self.cic = cic
+        self.compliant = compliant
 
     def render(self) -> Text:
         """Render CompanyID widget."""
@@ -21,9 +22,12 @@ class CompanyID(Widget):
         except KeyError:
             manufacturer_name = "Unknown"
 
-        return Text.assemble(
-            f"0x{self.cic:04x} (", (manufacturer_name, "green bold"), ")"
-        )
+        if self.compliant:
+            return Text.assemble(
+                f"0x{self.cic:04x} (", (manufacturer_name, "green bold"), ")"
+            )
+        else:
+            return Text(f"0x{self.cic:04x}")
 
 
 class HexData(Widget):
@@ -69,10 +73,11 @@ class UUID(Widget):
 class Advertisement(Widget):
     """Widget that shows raw advertisement data."""
 
-    def __init__(self, advertisement_data):
+    def __init__(self, advertisement_data, cid_compliant):
         """Initialize Advertisement widget."""
         super().__init__()
         self.advertisement_data = advertisement_data
+        self.cid_compliant = cid_compliant
 
     def render(self) -> Text:
         """Render Advertisement widget."""
@@ -98,7 +103,11 @@ class Advertisement(Widget):
             tree = Tree("manufacturer data:")
             for cic, data in self.advertisement_data.manufacturer_data.items():
                 tree.add(
-                    Text.assemble(CompanyID(cic).render(), ": ", HexData(data).render())
+                    Text.assemble(
+                        CompanyID(cic, self.cid_compliant).render(),
+                        ": ",
+                        HexData(data).render(),
+                    )
                 )
             table.add_row(tree)
 
