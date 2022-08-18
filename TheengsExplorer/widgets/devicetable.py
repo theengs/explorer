@@ -45,7 +45,8 @@ class DeviceTable(Widget):
                 Decoded(info.decoded),
             ]
             if self.config["advertisement"]:
-                cells.append(Advertisement(info.advertisement_data))
+                cid_compliant = info.decoded.get("cidc", True)
+                cells.append(Advertisement(info.advertisement_data, cid_compliant))
 
             table.add_row(*cells)
         if table.rows:
