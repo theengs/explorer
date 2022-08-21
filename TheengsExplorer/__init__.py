@@ -99,7 +99,7 @@ class TheengsExplorerApp(App):
 
 if __name__ == "__main__":
 
-    config = {"adapter": None, "advertisement": True, "scanning_mode": "active"}
+    config = {"adapter": None, "advertisement": True, "scanning_mode": "active", "temp_unit": "celsius"}
 
     parser = ArgumentParser()
     parser.add_argument(
@@ -117,10 +117,21 @@ if __name__ == "__main__":
         choices=("active", "passive"),
         help="Scanning mode (default: active)",
     )
+    parser.add_argument(
+        "-t",
+        "--temperature-unit",
+        dest="temperature_unit",
+        type=str,
+        default="celsius",
+        choices=("celsius", "fahrenheit"),
+        help="Temperature unit (default: celsius)",
+    )
+
     args = parser.parse_args()
 
     if args.adapter:
         config["adapter"] = args.adapter
     config["scanning_mode"] = args.scanning_mode
+    config["temperature_unit"] = args.temperature_unit
 
     TheengsExplorerApp.run(config=config, title="Theengs Explorer")

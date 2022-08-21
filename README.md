@@ -14,7 +14,7 @@ You can use some optional arguments:
 
 ```shell
 $ python3 TheengsExplorer/__init__.py --help
-usage: __init__.py [-h] [-a ADAPTER] [-s {active,passive}]
+usage: __init__.py [-h] [-a ADAPTER] [-s {active,passive}] [-t {celsius,fahrenheit}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -22,6 +22,8 @@ optional arguments:
                         Bluetooth adapter (e.g. hci1 on Linux)
   -s {active,passive}, --scanning-mode {active,passive}
                         Scanning mode (default: active)
+  -t {celsius,fahrenheit}, --temperature-unit {celsius,fahrenheit}
+                        Temperature unit (default: celsius)
 ```
 
 Passive scanning only works on Windows or Linux kernel >= 5.10 and BlueZ >= 5.56 with experimental features enabled.
