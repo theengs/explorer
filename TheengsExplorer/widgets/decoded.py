@@ -37,10 +37,14 @@ class Property(Widget):
 class Decoded(Widget):
     """Widget that shows decoded data of an advertisement."""
 
-    def __init__(self, decoded):
+    def __init__(self, decoded, temperature_unit):
         """Initialize Decoded widget."""
         super().__init__()
         self.decoded = decoded
+        if temperature_unit == "celsius":
+            self.hidden_temperature_unit = "tempf"
+        else:
+            self.hidden_temperature_unit = "tempc"
 
     def render(self) -> Table:
         """Render Decoded widget."""
@@ -48,20 +52,28 @@ class Decoded(Widget):
 
         if self.decoded:
             decoded = self.decoded.copy()  # Make local copy before deleting keys
-            # Remove tempf and keys we already show in the Device or Advertisement widgets
-            for key in ["name", "brand", "model", "model_id", "tempf", "cidc"]:
+            # Remove keys we already show in the Device or Advertisement widgets,
+            # as well as tempf or tempc according to the user's chosen temperature unit.
+            for key in ["name", "brand", "model", "model_id", "cidc", self.hidden_temperature_unit]:
                 try:
                     del decoded[key]
                 except KeyError:
                     pass
-            # Remove tempf_* keys
+            # Remove tempf_* or tempc_* keys
             for key in list(decoded.keys()):
-                if key.startswith("tempf_"):
+                if key.startswith(f"{self.hidden_temperature_unit}_"):
                     del decoded[key]
 
             device_properties = json.loads(getProperties(self.decoded["model_id"]))[
                 "properties"
             ]
+
+            # Change tempc device properties to tempf if using Fahrenheit
+            if self.hidden_temperature_unit == "tempc":
+                for key in list(device_properties.keys()):
+                    if key.startswith("tempc"):
+                        device_properties[key]["unit"] = "°F"
+                        device_properties[key.replace("tempc", "tempf")] = device_properties.pop(key)
 
             for entry in decoded:
                 table.add_row(Property(entry, decoded[entry], device_properties))

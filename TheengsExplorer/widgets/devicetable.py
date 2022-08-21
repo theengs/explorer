@@ -42,7 +42,7 @@ class DeviceTable(Widget):
                     info.decoded,
                 ),
                 RSSI(info.device.rssi),
-                Decoded(info.decoded),
+                Decoded(info.decoded, self.config["temperature_unit"]),
             ]
             if self.config["advertisement"]:
                 cid_compliant = info.decoded.get("cidc", True)
