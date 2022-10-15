@@ -21,8 +21,12 @@ class DeviceInfo:
         self.previous_time = self.time
         self.time = datetime.now()
 
-        # Merge decoded data, with new data overriding previous data
         decoded = decode(advertisement_data)
+        # If advertisement contains timestamp, add current system time
+        if "time" in decoded:
+            decoded["system_time"] = int(datetime.now().timestamp())
+
+        # Merge decoded data, with new data overriding previous data
         if self.decoded:
             if decoded:
                 self.decoded = {**self.decoded, **decoded}
