@@ -53,9 +53,9 @@ class TheengsExplorerApp(App):
         if config["adapter"]:
             scanner_kwargs["adapter"] = config["adapter"]
 
-        self.scanner = BleakScanner(**scanner_kwargs)
+        scanner_kwargs["detection_callback"] = self.detection_callback
 
-        self.scanner.register_detection_callback(self.detection_callback)
+        self.scanner = BleakScanner(**scanner_kwargs)
         self.scanning = True
         super().__init__(*args, **kwargs)
 
