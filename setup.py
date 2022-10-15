@@ -17,5 +17,5 @@ setup(
     package_dir={"TheengsExplorer": "TheengsExplorer"},
     packages=["TheengsExplorer"],
     include_package_data=True,
-    install_requires=["TheengsDecoder>=0.4.0", "textual>=0.1.15", "bluetooth-numbers>=0.1.1", "bleak>=0.15.0", "humanize>=4.4.0"],
+    install_requires=["TheengsDecoder>=0.4.0", "textual>=0.1.15", "bluetooth-numbers>=0.1.1", "bleak>=0.17.0", "humanize>=4.4.0"],
 )
