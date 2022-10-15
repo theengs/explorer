@@ -29,6 +29,7 @@ class DeviceTable(Widget):
         table.add_column("Time")
         table.add_column("Device")
         table.add_column("RSSI", justify="right", max_width=8)
+        table.add_column("TX Power", justify="right", max_width=8)
         table.add_column("Decoded data")
         if self.config["advertisement"]:
             table.add_column("Advertisement data")
@@ -42,6 +43,7 @@ class DeviceTable(Widget):
                     info.decoded,
                 ),
                 RSSI(info.device.rssi),
+                RSSI(info.advertisement_data.tx_power),
                 Decoded(info.decoded, self.config["temperature_unit"]),
             ]
             if self.config["advertisement"]:

@@ -11,4 +11,7 @@ class RSSI(Widget):
 
     def render(self) -> str:
         """Render RSSI widget."""
-        return f"{self.rssi} dBm"
+        if self.rssi is not None:
+            return f"{self.rssi} dBm"
+        else:
+            return ""
