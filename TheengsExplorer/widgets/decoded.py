@@ -1,5 +1,7 @@
+from datetime import datetime
 import json
 
+import humanize
 from rich.table import Table
 from rich.text import Text
 from textual.widget import Widget
@@ -51,10 +53,18 @@ class Decoded(Widget):
         table = Table(show_header=False, show_edge=False, padding=0)
 
         if self.decoded:
-            decoded = self.decoded.copy()  # Make local copy before deleting keys
+            decoded = self.decoded.copy()  # Make local copy before deleting keys and changing values
+
+            # Make timestamps human-readable
+            if "system_time" in decoded:
+                timedelta = int(datetime.now().timestamp()) - decoded["system_time"]
+                for key in decoded.keys():
+                    if key.startswith("time_"):
+                        decoded[key] = humanize.naturaltime(decoded["time"] - decoded[key] + timedelta)
+
             # Remove keys we already show in the Device or Advertisement widgets,
             # as well as tempf or tempc according to the user's chosen temperature unit.
-            for key in ["name", "brand", "model", "model_id", "cidc", self.hidden_temperature_unit]:
+            for key in ["name", "brand", "model", "model_id", "cidc", "time", "system_time", self.hidden_temperature_unit]:
                 try:
                     del decoded[key]
                 except KeyError:
