@@ -1,5 +1,5 @@
 from bleak.uuids import uuidstr_to_str
-from bluetooth_numbers.companies import company
+from bluetooth_numbers import company
 from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
@@ -15,7 +15,7 @@ class CompanyID(Widget):
         self.cic = cic
         self.compliant = compliant
 
-    def render(self) -> Text:
+    def __rich__(self) -> Text:
         """Render CompanyID widget."""
         try:
             manufacturer_name = company[self.cic]
@@ -38,7 +38,7 @@ class HexData(Widget):
         super().__init__()
         self.data = data
 
-    def render(self) -> Text:
+    def __rich__(self) -> Text:
         """Render HexData widget."""
         return Text.assemble(
             (f"0x{bytes(self.data).hex()}", "cyan bold"), f" ({len(self.data)} bytes)"
@@ -53,7 +53,7 @@ class UUID(Widget):
         super().__init__()
         self.uuid128 = uuid128
 
-    def render(self) -> Text:
+    def __rich__(self) -> Text:
         """Render UUID widget."""
         # Colorize the 16-bit UUID part in a standardized 128-bit UUID.
         if self.uuid128.startswith("0000") and self.uuid128.endswith(
@@ -79,7 +79,7 @@ class Advertisement(Widget):
         self.advertisement_data = advertisement_data
         self.cid_compliant = cid_compliant
 
-    def render(self) -> Text:
+    def __rich__(self) -> Text:
         """Render Advertisement widget."""
         table = Table(show_header=False, show_edge=False, padding=0)
 

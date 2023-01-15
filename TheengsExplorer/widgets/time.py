@@ -15,7 +15,7 @@ class Time(Widget):
         self.time = time
         self.previous_time = previous_time
 
-    def render(self) -> Table:
+    def __rich__(self) -> Table:
         """Render Time widget."""
         table = Table(show_header=False, show_edge=False, padding=0)
         table.add_row(self.time.strftime("%H:%M:%S.%f"))
