@@ -18,7 +18,7 @@ class Property(Widget):
         self.value = value
         self.device_properties = device_properties
 
-    def render(self) -> Text:
+    def __rich__(self) -> Text:
         """Render Property widget."""
         if self.entry in self.device_properties:
             unit = self.device_properties[self.entry]["unit"]
@@ -48,7 +48,7 @@ class Decoded(Widget):
         else:
             self.hidden_temperature_unit = "tempc"
 
-    def render(self) -> Table:
+    def __rich__(self) -> Table:
         """Render Decoded widget."""
         table = Table(show_header=False, show_edge=False, padding=0)
 

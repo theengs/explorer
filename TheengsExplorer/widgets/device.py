@@ -9,15 +9,15 @@ class Device(Widget):
     def __init__(self, name, address, decoded):
         """Initialize Device widget."""
         super().__init__()
-        self.name = name
+        self.dev_name = name
         self.address = address
         self.decoded = decoded
 
-    def render(self) -> Table:
+    def __rich__(self) -> Table:
         """Render Device widget."""
         table = Table(show_header=False, show_edge=False, padding=0)
-        if self.name:
-            table.add_row(Text(self.name, style="green bold"))
+        if self.dev_name:
+            table.add_row(Text(self.dev_name, style="green bold"))
 
         table.add_row(self.address)
 

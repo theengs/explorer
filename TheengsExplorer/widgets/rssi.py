@@ -9,7 +9,7 @@ class RSSI(Widget):
         super().__init__()
         self.rssi = rssi
 
-    def render(self) -> str:
+    def __rich__(self) -> str:
         """Render RSSI widget."""
         if self.rssi is not None:
             return f"{self.rssi} dBm"

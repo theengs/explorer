@@ -22,8 +22,9 @@ from argparse import ArgumentParser
 import platform
 
 from bleak import BleakScanner
-from textual.app import App
-from textual.widgets import Footer, ScrollView
+from textual.app import App, ComposeResult
+from textual.widgets import Header, Footer
+from textual.scroll_view import ScrollView
 from widgets.devicetable import DeviceTable
 
 if platform.system() == "Linux":
@@ -61,14 +62,16 @@ class TheengsExplorerApp(App):
 
     async def detection_callback(self, device, advertisement_data) -> None:
         """Process detected advertisement data from device."""
-        self.device_table.update_device(device, advertisement_data)
-        await self.scroll_view.update(self.device_table.render(), home=False)
 
-    async def on_load(self) -> None:
+        self.query_one(DeviceTable).update_device(device, advertisement_data)
+        if isinstance(self.focused, ScrollView):
+            await self.focused.update(self.device_table.render(), home=False)
+
+    def on_load(self) -> None:
         """Bind keys when the app loads."""
-        await self.bind("q", "quit", "Quit")
-        await self.bind("s", "toggle_scan", "Toggle scan")
-        await self.bind("a", "toggle_advertisement", "Show advertisement")
+        self.bind("q", "quit", description="Quit")
+        self.bind("s", "toggle_scan", description="Toggle scan")
+        self.bind("a", "toggle_advertisement", description="Show advertisement")
 
     async def action_toggle_scan(self) -> None:
         """Start or stop BLE scanner."""
@@ -86,20 +89,23 @@ class TheengsExplorerApp(App):
         else:
             self.config["advertisement"] = True
 
+    def compose(self) -> ComposeResult:
+        """Create app child widgets."""
+
+        yield Header()
+        yield ScrollView(DeviceTable(self.config));
+        yield Footer()
+
     async def on_mount(self) -> None:
         """Create ScrollView and start BLE scan."""
-        self.device_table = DeviceTable(self.config)
-        self.scroll_view = ScrollView(self.device_table)
 
-        await self.view.dock(Footer(), edge="bottom")
-        await self.view.dock(self.scroll_view, edge="top")
-
+        self.query_one(ScrollView).focus()
         await self.scanner.start()
 
 
 if __name__ == "__main__":
 
-    config = {"adapter": None, "advertisement": True, "scanning_mode": "active", "temp_unit": "celsius"}
+    config = {"adapter": None, "advertisement": True, "scanning_mode": "active", "temperature_unit": "celsius"}
 
     parser = ArgumentParser()
     parser.add_argument(
@@ -134,4 +140,6 @@ if __name__ == "__main__":
     config["scanning_mode"] = args.scanning_mode
     config["temperature_unit"] = args.temperature_unit
 
-    TheengsExplorerApp.run(config=config, title="Theengs Explorer")
+    # title="Theengs Explorer"
+    if __name__ == "__main__":
+        TheengsExplorerApp(config=config).run()
